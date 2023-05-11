@@ -1,4 +1,4 @@
-# Frontend Mentor - Age calculator app solution
+# Age calculator app [Frontend Mentor]
 
 ![application screenshot](public/screenshot.png)
 
@@ -8,12 +8,10 @@ This is a solution to the [Age calculator app challenge on Frontend Mentor](http
 
 - [Overview](#overview)
   - [The challenge](#the-challenge)
-  - [Links](#links)
 - [My process](#my-process)
   - [Built with](#built-with)
   - [What I learned](#what-i-learned)
-  - [Continued development](#continued-development)
-  - [Useful resources](#useful-resources)
+  - [Acknowledgement](#acknowledgement)
 - [Author](#author)
 
 ## Overview
@@ -33,11 +31,6 @@ Users should be able to:
 - See hover and focus states for all interactive elements on the page
 - **Bonus**: See the age numbers animate to their final number when the form is submitted
 
-### Links
-
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
-
 ## My process
 
 ### Built with
@@ -46,6 +39,7 @@ Users should be able to:
 - CSS custom properties
 - Flexbox
 - Desktop-first workflow
+- Typescript
 - [React](https://reactjs.org/) - JS library
 - [Next.js](https://nextjs.org/) - React framework
 - [React Hook Form](https://react-hook-form.com/) - For form validation
@@ -54,17 +48,13 @@ Users should be able to:
 
 ### What I learned
 
-Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
+It was my first time using _Next.js_, _React Hook Form_, _Zod_ and _Day.js_, which were the biggest challenges, besides making it responsive using media queries in CSS - something I had never done without using a framework like Tailwind CSS before.
 
-- React Hook Form
-- Zod
-- Day.js
+There's still a long way to go, specially in making and validating forms, but it was pretty interesting to learn how to use _React Hook Form_ and _Zod_, definitely a better way to work with forms.
 
-### Continued development
+### Acknowledgement
 
-Use this section to outline areas that you want to continue focusing on in future projects. These could be concepts you're still not completely comfortable with or techniques you found useful that you want to refine and perfect.
-
-### Useful resources
+People and resources that helped me get through the challenge.
 
 - [Kevin Powell](https://www.youtube.com/@KevinPowell) - CSS
 - [Web Dev Simplified](https://www.youtube.com/@WebDevSimplified) - React/Zod
