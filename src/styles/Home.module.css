@@ -1,22 +1,21 @@
 .main {
 	margin: 0 auto;
-	max-width: var(--max-width);
-	min-width: var(--min-width);
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	height: 100vh;
+	padding: 2rem;
 }
 
-/* calculator body */
+/* container */
 
 .calculator {
-	background-color: var(--color-neutral-white);
+	max-width: var(--max-width);
+	background-color: var(--clr-ntrl-ltr);
 	padding: 3rem;
-	max-width: 840px;
-	margin: 0 auto;
 	border-radius: 1rem 1rem 3rem 1rem;
+}
+
+@media (max-width: 768px) {
+	.calculator {
+		padding: 1.5rem;
+	}
 }
 
 /* form */
@@ -24,7 +23,6 @@
 .form {
 	display: flex;
 	gap: 1.5rem;
-	padding-right: 12rem;
 }
 
 .form__field {
@@ -36,26 +34,60 @@
 .form__field label {
 	text-transform: uppercase;
 	letter-spacing: 0.2rem;
-	font-size: var(--font-size-sm);
-	font-weight: var(--font-weight-700);
-	color: var(--color-neutral-smokey-grey);
+	font-size: var(--fs-sm);
+	font-weight: var(--fw-700);
+	color: var(---clr-ntrl-dk);
 }
 
 .form__field input[type='number'] {
-	border: 1px solid var(--color-neutral-light-grey);
+	border: 1px solid var(--clr-ntrl);
 	padding: 1rem 1.6rem;
 	border-radius: 0.5rem;
-	font-family: var(--font-family);
-	font-size: var(--font-size-md);
-	font-weight: var(--font-weight-700);
+	font-family: var(--ff);
+	font-size: var(--fs-md);
+	font-weight: var(--fw-800);
 	width: 100%;
+}
+
+@media (max-width: 768px) {
+	.form__field input[type='number'] {
+		padding: 0.75rem 1rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.form__field input[type='number'] {
+		padding: 0.4rem 0.6rem;
+		border-radius: 0.2rem;
+	}
 }
 
 .form__field input[type='number']:active,
 .form__field input[type='number']:focus,
 .form__field input[type='number']:focus-within,
 .form__field input[type='number']:focus-visible {
-	border: 1px solid var(--color-primary-purple);
+	border: 1px solid var(--clr-primary);
+}
+
+/* error */
+
+.error input[type='number'],
+.error input[type='number']:active,
+.error input[type='number']:focus,
+.error input[type='number']:focus-within,
+.error input[type='number']:focus-visible {
+	border: 1px solid var(--clr-secondary);
+}
+
+.error span {
+	color: var(--clr-secondary);
+	font-size: var(--fs-sm);
+	font-weight: var(--fw-400);
+	font-style: italic;
+}
+
+.error label {
+	color: var(--clr-secondary);
 }
 
 /* divider + button */
@@ -63,6 +95,13 @@
 .divider {
 	display: flex;
 	align-items: center;
+	margin: 2rem 0;
+}
+
+@media (max-width: 480px) {
+	.divider {
+		margin: 1rem 0;
+	}
 }
 
 /* divider */
@@ -71,43 +110,111 @@
 	flex-grow: 1;
 	align-self: center;
 	height: 2px;
-	background-color: var(--color-neutral-off-white);
+	background-color: var(--clr-ntrl-lt);
+}
+
+/* spacer, divider items order */
+
+.spacer {
+	visibility: hidden;
+	display: block;
+}
+
+.left {
+	order: 1;
+}
+
+.button {
+	order: 3;
+}
+
+.right {
+	order: 2;
+}
+
+@media (max-width: 768px) {
+	.spacer {
+		display: none;
+		visibility: show;
+	}
+
+	.left {
+		order: 1;
+	}
+
+	.button {
+		order: 2;
+	}
+
+	.right {
+		order: 3;
+	}
 }
 
 /* submit button */
 
 .button {
-	background-color: var(--color-primary-purple);
+	background-color: var(--clr-primary);
 	border-radius: 100%;
 	display: flex;
-	padding: 1rem;
+	padding: 1.5rem;
+}
+
+.button:hover,
+.button:focus {
+	background-color: var(--clr-ntrl-dkr);
+	cursor: pointer;
 }
 
 .button img {
 	flex: 1;
+	width: 2.875rem;
+	height: 2.875rem;
+}
+
+@media (max-width: 768px) {
+	.button {
+		padding: 1rem;
+	}
+
+	.button img {
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.button {
+		padding: 0.8rem;
+	}
+
+	.button img {
+		width: 1.5rem;
+		height: 1.5rem;
+	}
 }
 
 /* results */
 
 .result p {
-	font-size: var(--font-size-lg);
-	font-weight: var(--font-weight-800);
+	font-size: var(--fs-lg);
+	font-weight: var(--fw-800);
 	font-style: italic;
 	line-height: 1.1;
 }
 
 .result__numbers {
-	color: var(--color-primary-purple);
+	color: var(--clr-primary);
 }
 
 /* footer */
 
 .attribution {
 	margin-top: 1rem;
-	font-size: 0.75rem;
+	font-size: var(--fs-dtl);
 	text-align: center;
 }
 
 .attribution a {
-	color: var(--color-primary-purple);
+	color: var(--clr-primary);
 }

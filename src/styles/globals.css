@@ -1,50 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap');
+
 :root {
-	--min-width: 375px;
-	--max-width: 1440px;
+	--clr-ntrl-ltr: hsl(0, 0%, 100%);
+	--clr-ntrl-lt: hsl(0, 0%, 94%);
+	--clr-ntrl: hsl(0, 0%, 86%);
+	---clr-ntrl-dk: hsl(0, 1%, 44%);
+	--clr-ntrl-dkr: hsl(0, 0%, 8%);
+
+	--clr-primary: hsl(259, 100%, 65%);
+	--clr-secondary: hsl(0, 100%, 67%);
+
+	--ff: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+		Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+	--fw-400: 400;
+	--fw-700: 700;
+	--fw-800: 800;
+
+	--fs-dtl: 0.85rem;
+	--fs-sm: 0.875rem;
+	--fs-md: 2rem;
+	--fs-lg: 6.5rem;
+
+	--max-width: 880px;
 
 	--border-radius: 12px;
+}
 
-	--font-family: 'Poppins', sans-serif;
+@media (max-width: 768px) {
+	:root {
+		--fs-dtl: 0.75rem;
+		--fs-sm: 0.75rem;
+		--fs-md: 1.25rem;
+		--fs-lg: 3.5rem;
+	}
+}
 
-	--font-size-sm: 0.85rem;
-	--font-size-md: 2rem;
-	--font-size-lg: 6rem;
-
-	--font-weight-400: 400;
-	--font-weight-700: 700;
-	--font-weight-800: 800;
-
-	--color-primary-purple: hsl(259, 100%, 65%);
-	--color-primary-light-red: hsl(0, 100%, 67%);
-
-	--color-neutral-white: hsl(0, 0%, 100%);
-	--color-neutral-off-white: hsl(0, 0%, 94%);
-	--color-neutral-light-grey: hsl(0, 0%, 86%);
-	--color-neutral-smokey-grey: hsl(0, 1%, 44%);
-	--color-neutral-off-black: hsl(0, 0%, 8%);
+@media (max-width: 480px) {
+	:root {
+		--fs-dtl: 0.5rem;
+		--fs-sm: 0.6rem;
+		--fs-md: 0.8rem;
+		--fs-lg: 2.5rem;
+	}
 }
 
 * {
 	box-sizing: border-box;
 	padding: 0;
 	margin: 0;
+
+	-webkit-transition: font-size 0.5s ease-in-out;
+	-moz-transition: font-size 0.5s ease-in-out;
+	-o-transition: font-size 0.5s ease-in-out;
+	transition: font-size 0.5s ease-in-out;
 }
 
 html,
 body {
-	max-width: 100vw;
+	width: 100vw;
+	height: 100vh;
 	overflow-x: hidden;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 body {
-	color: rgb(var(--color-neutral-off-black));
-	background: var(--color-neutral-off-white);
+	color: rgb(var(--clr-ntrl-dkr));
+	background: var(--clr-ntrl-lt);
+	font-family: var(--ff);
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
 	-webkit-appearance: none;
 	margin: 0;
+}
+
+button[type='submit'] {
+	outline: 0;
+	border: 0;
 }
 
 input[type='number'] {
