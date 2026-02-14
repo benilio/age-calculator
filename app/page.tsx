@@ -1,4 +1,4 @@
-import Head from "next/head";
+'use client';
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -173,13 +173,6 @@ export default function Home() {
   }
 
   return (
-    <>
-      <Head>
-        <title>Age Calculator</title>
-        <meta name="description" content="Age calculator app" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-      </Head>
       <main className={`${styles.main}`}>
         <section className={styles.calculator}>
           <form
@@ -322,6 +315,5 @@ export default function Home() {
           .
         </div>
       </main>
-    </>
   );
 }
