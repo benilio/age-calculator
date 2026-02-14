@@ -1,220 +1,223 @@
 .main {
-	margin: 0 auto;
-	padding: 2rem;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
 /* container */
 
 .calculator {
-	max-width: var(--max-width);
-	background-color: var(--clr-ntrl-ltr);
-	padding: 3rem;
-	border-radius: 1rem 1rem 3rem 1rem;
+    max-width: var(--max-width);
+    background-color: var(--clr-ntrl-ltr);
+    padding: 3rem;
+    border-radius: 1rem 1rem 3rem 1rem;
 }
 
 @media (max-width: 768px) {
-	.calculator {
-		padding: 1.5rem;
-	}
+    .calculator {
+        padding: 1.5rem;
+    }
 }
 
 /* form */
 
 .form {
-	display: flex;
-	gap: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
 }
 
 .form__field {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .form__field label {
-	text-transform: uppercase;
-	letter-spacing: 0.2rem;
-	font-size: var(--fs-sm);
-	font-weight: var(--fw-700);
-	color: var(---clr-ntrl-dk);
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-700);
+    color: var(---clr-ntrl-dk);
 }
 
-.form__field input[type='number'] {
-	border: 1px solid var(--clr-ntrl);
-	padding: 1rem 1.6rem;
-	border-radius: 0.5rem;
-	font-family: var(--ff);
-	font-size: var(--fs-md);
-	font-weight: var(--fw-800);
-	width: 100%;
+.form__field__numeric {
+    border: 1px solid var(--clr-ntrl);
+    padding: 1rem 1.6rem;
+    border-radius: 0.5rem;
+    font-family: var(--ff), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+		Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: var(--fs-md);
+    font-weight: var(--fw-800);
+    width: 100%;
 }
 
 @media (max-width: 768px) {
-	.form__field input[type='number'] {
-		padding: 0.75rem 1rem;
-	}
+    .form__field__numeric {
+        padding: 0.75rem 1rem;
+    }
 }
 
 @media (max-width: 480px) {
-	.form__field input[type='number'] {
-		padding: 0.4rem 0.6rem;
-		border-radius: 0.2rem;
-	}
+    .form__field__numeric {
+        padding: 0.4rem 0.6rem;
+        border-radius: 0.2rem;
+    }
 }
 
-.form__field input[type='number']:active,
-.form__field input[type='number']:focus,
-.form__field input[type='number']:focus-within,
-.form__field input[type='number']:focus-visible {
-	border: 1px solid var(--clr-primary);
+.form__field__numeric:active,
+.form__field__numeric:focus,
+.form__field__numeric:focus-within,
+.form__field__numeric:focus-visible {
+    border: 1px solid var(--clr-primary);
+    outline: 1px solid var(--clr-primary);
 }
 
 /* error */
 
-.error input[type='number'],
-.error input[type='number']:active,
-.error input[type='number']:focus,
-.error input[type='number']:focus-within,
-.error input[type='number']:focus-visible {
-	border: 1px solid var(--clr-secondary);
+.form__field__numeric__error,
+.form__field__numeric__error:active,
+.form__field__numeric__error:focus,
+.form__field__numeric__error:focus-within,
+.form__field__numeric__error:focus-visible {
+    border-color: var(--clr-secondary);
+    outline-color: var(--clr-secondary);
 }
 
-.error span {
-	color: var(--clr-secondary);
-	font-size: var(--fs-sm);
-	font-weight: var(--fw-400);
-	font-style: italic;
+.form__field__error span {
+    color: var(--clr-secondary);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-400);
+    font-style: italic;
 }
 
-.error label {
-	color: var(--clr-secondary);
+.form__field__error label {
+    color: var(--clr-secondary);
 }
 
 /* divider + button */
 
 .divider {
-	display: flex;
-	align-items: center;
-	margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    margin: 2rem 0;
 }
 
 @media (max-width: 480px) {
-	.divider {
-		margin: 1rem 0;
-	}
+    .divider {
+        margin: 1rem 0;
+    }
 }
 
 /* divider */
 
 .divider__bar {
-	flex-grow: 1;
-	align-self: center;
-	height: 2px;
-	background-color: var(--clr-ntrl-lt);
+    flex-grow: 1;
+    align-self: center;
+    height: 2px;
+    background-color: var(--clr-ntrl-lt);
 }
 
 /* spacer, divider items order */
 
 .spacer {
-	visibility: hidden;
-	display: block;
+    visibility: hidden;
+    display: block;
 }
 
 .left {
-	order: 1;
+    order: 1;
 }
 
 .button {
-	order: 3;
+    order: 3;
 }
 
 .right {
-	order: 2;
+    order: 2;
 }
 
 @media (max-width: 768px) {
-	.spacer {
-		display: none;
-		visibility: show;
-	}
+    .spacer {
+        display: none;
+        visibility: visible;
+    }
 
-	.left {
-		order: 1;
-	}
+    .left {
+        order: 1;
+    }
 
-	.button {
-		order: 2;
-	}
+    .button {
+        order: 2;
+    }
 
-	.right {
-		order: 3;
-	}
+    .right {
+        order: 3;
+    }
 }
 
 /* submit button */
 
 .button {
-	background-color: var(--clr-primary);
-	border-radius: 100%;
-	display: flex;
-	padding: 1.5rem;
+    background-color: var(--clr-primary);
+    border-radius: 100%;
+    display: flex;
+    padding: 1.5rem;
 }
 
 .button:hover,
 .button:focus {
-	background-color: var(--clr-ntrl-dkr);
-	cursor: pointer;
+    background-color: var(--clr-ntrl-dkr);
+    cursor: pointer;
 }
 
 .button img {
-	flex: 1;
-	width: 2.875rem;
-	height: 2.875rem;
+    flex: 1;
+    width: 2.875rem;
+    height: auto;
 }
 
 @media (max-width: 768px) {
-	.button {
-		padding: 1rem;
-	}
+    .button {
+        padding: 1rem;
+    }
 
-	.button img {
-		width: 2.5rem;
-		height: 2.5rem;
-	}
+    .button img {
+        width: 2.5rem;
+        height: auto;
+    }
 }
 
 @media (max-width: 480px) {
-	.button {
-		padding: 0.8rem;
-	}
+    .button {
+        padding: 0.8rem;
+    }
 
-	.button img {
-		width: 1.5rem;
-		height: 1.5rem;
-	}
+    .button img {
+        width: 1.5rem;
+        height: auto;
+    }
 }
 
 /* results */
 
 .result p {
-	font-size: var(--fs-lg);
-	font-weight: var(--fw-800);
-	font-style: italic;
-	line-height: 1.1;
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-800);
+    font-style: italic;
+    line-height: 1.1;
 }
 
 .result__numbers {
-	color: var(--clr-primary);
+    color: var(--clr-primary);
 }
 
 /* footer */
 
 .attribution {
-	margin-top: 1rem;
-	font-size: var(--fs-dtl);
-	text-align: center;
+    margin-top: 1rem;
+    font-size: var(--fs-dtl);
+    text-align: center;
 }
 
 .attribution a {
-	color: var(--clr-primary);
+    color: var(--clr-primary);
 }

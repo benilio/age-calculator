@@ -1,315 +1,327 @@
-import Head from 'next/head'
+import Head from "next/head";
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import dayjs from 'dayjs'
-import duration from 'dayjs/plugin/duration'
+import dayjs from "dayjs";
 
-import Image from 'next/image'
+import Image from "next/image";
 
-// @ts-ignore
-import ArrowIconUrl from '@/assets/icon-arrow.svg?url'
-import styles from '@/styles/Home.module.css'
-
-// Import duration from dayjs
-dayjs.extend(duration)
+import ArrowIconUrl from "@/assets/icon-arrow.svg";
+import styles from "@/styles/Home.module.css";
 
 // Check days in month
 // https://stackoverflow.com/a/1433119
 function daysInMonth(m: number, y: number) {
-	// m is 0 indexed: 0-11
-	switch (m) {
-		case 1:
-			return (y % 4 == 0 && y % 100) || y % 400 == 0 ? 29 : 28
-		case 8:
-		case 3:
-		case 5:
-		case 10:
-			return 30
-		default:
-			return 31
-	}
+  // m is 0
+  // indexed: 0-11
+
+  // 28-29 => 1 Feb
+  // 31 => 0 Jan, 2 Mar, 4 May, 6 Jul, 7 Aug, 9 Oct, 11 Dec
+  // 30 => 3 Apr, 5 Jun, 8 Sep, 10 Nov
+
+  switch (m) {
+    // February has 28 days, or 29 days if it is a leap year
+    case 1:
+      return (y % 4 == 0 && y % 100) || y % 400 == 0 ? 29 : 28;
+
+    // Months with 30 days
+    case 3:
+    case 5:
+    case 8:
+    case 10:
+      return 30;
+
+    // By default, months are 31 days long
+    default:
+      return 31;
+  }
 }
 
 // Check if the date is valid
 // https://stackoverflow.com/a/1433119
 function isValid(d: number, m: number, y: number) {
-	m = parseInt(m.toString(), 10) - 1
-	return m >= 0 && m < 12 && d > 0 && d <= daysInMonth(m, y)
+  m = parseInt(m.toString(), 10) - 1;
+  return m >= 0 && m < 12 && d > 0 && d <= daysInMonth(m, y);
 }
 
 // Form date schema with validation
 const createDateSchema = z
-	.object({
-		day: z
-			.number({
-				required_error: 'This field is required',
-				invalid_type_error: 'This field is required',
-			})
-			.int('Must be a valid day')
-			.positive('Must be a valid day')
-			.min(1, 'Must be a valid day')
-			.max(31, 'Must be a valid day'),
-		month: z
-			.number({
-				required_error: 'This field is required',
-				invalid_type_error: 'This field is required',
-			})
-			.int('Must be a valid month')
-			.positive('Must be a valid month')
-			.min(1, 'Must be a valid month')
-			.max(12, 'Must be a valid month'),
-		year: z
-			.number({
-				required_error: 'This field is required',
-				invalid_type_error: 'This field is required',
-			})
-			.int('Must be a valid year')
-			.positive('Must be a valid year')
-			.min(1, 'Must be a valid year')
-			.max(new Date().getFullYear(), 'Must be in the past'),
-	})
-	.refine((data) => isValid(data.day, data.month, data.year) === true, {
-		message: 'Must be a valid date',
-		path: ['day'],
-	})
-	.refine((data) => isValid(data.day, data.month, data.year) === true, {
-		message: ' ',
-		path: ['month'],
-	})
-	.refine((data) => isValid(data.day, data.month, data.year) === true, {
-		message: ' ',
-		path: ['year'],
-	})
+  .object({
+    day: z
+      .number({
+        required_error: "This field is required",
+        invalid_type_error: "This field is required",
+      })
+      .int("Must be a valid day")
+      .positive("Must be a valid day")
+      .min(1, "Must be a valid day")
+      .max(31, "Must be a valid day"),
+    month: z
+      .number({
+        required_error: "This field is required",
+        invalid_type_error: "This field is required",
+      })
+      .int("Must be a valid month")
+      .positive("Must be a valid month")
+      .min(1, "Must be a valid month")
+      .max(12, "Must be a valid month"),
+    year: z
+      .number({
+        required_error: "This field is required",
+        invalid_type_error: "This field is required",
+      })
+      .int("Must be a valid year")
+      .positive("Must be a valid year")
+      .min(1, "Must be a valid year")
+      .max(new Date().getFullYear(), "Must be in the past"),
+  })
+  .superRefine((data, ctx) => {
+    const { day, month, year } = data;
+
+    // Check for invalid calendar date (like 31/02)
+    if (!isValid(day, month, year)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Must be a valid date",
+        path: ["day"], // show error on day field
+      });
+    }
+
+    // Check for future date (invalid)
+    const inputDate = new Date(year, month - 1, day);
+    const today = new Date();
+
+    if (inputDate > today) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Must be in the past",
+        path: ["year"], // show error on year field
+      });
+    }
+  });
 
 // Infer type of date inputs based on date schema
-type CreateDateData = z.infer<typeof createDateSchema>
+type CreateDateData = z.infer<typeof createDateSchema>;
 
 export default function Home() {
-	// Results holders
-	const [days, setDays] = useState('--')
-	const [months, setMonths] = useState('--')
-	const [years, setYears] = useState('--')
+  // Results holders
+  const [days, setDays] = useState("--");
+  const [months, setMonths] = useState("--");
+  const [years, setYears] = useState("--");
 
-	// Use react-hook-form
-	const {
-		register,
-		getValues,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<CreateDateData>({
-		resolver: zodResolver(createDateSchema),
-	})
+  // Use react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateDateData>({
+    resolver: zodResolver(createDateSchema),
+    mode: "onBlur", // Run check when losing input focus
+  });
 
-	// Form onSubmit response
-	function getDate() {
-		// Get values from form and turn into valid date
-		const day = getValues('day')
-		const month = getValues('month') - 1
-		const year = getValues('year')
-		const birthday = new Date(year, month, day)
+  function animateValue(
+    start: number,
+    end: number,
+    duration: number,
+    setter: (value: string) => void,
+  ) {
+    if (start === end) {
+      setter(end.toString());
+      return;
+    }
 
-		// Get current day (simple)
-		const currentDay = new Date()
-		const today = new Date(
-			currentDay.getFullYear(),
-			currentDay.getMonth(),
-			currentDay.getDate()
-		)
+    const range = end - start;
+    const increment = range > 0 ? 1 : -1;
+    const stepTime = Math.abs(Math.floor(duration / Math.abs(range)));
 
-		// Get the difference between today date and set date
-		const dateDiff = [
-			dayjs.duration(dayjs(today).diff(dayjs(birthday))).days(),
-			dayjs.duration(dayjs(today).diff(dayjs(birthday))).months(),
-			dayjs.duration(dayjs(today).diff(dayjs(birthday))).years(),
-		]
+    let current = start;
 
-		// Animate results
-		// https://stackoverflow.com/a/16994725
-		let daysDiff: number = 0
-		let monthsDiff: number = 0
-		let yearsDiff: number = 0
+    const timer = setInterval(() => {
+      current += increment;
+      setter(current.toString());
 
-		const dateDiffAni = (
-			start: number,
-			end: number,
-			duration: number,
-			target: any
-		) => {
-			if (start === end) return
-			let range = end - start
-			let current = start
-			let increment = end > start ? 1 : -1
-			let stepTime = Math.abs(Math.floor(duration / range))
-			let timer = setInterval(function () {
-				current += increment
-				target(current.toString())
-				if (current == end) {
-					clearInterval(timer)
-				}
-			}, stepTime)
-		}
+      if (current === end) {
+        clearInterval(timer);
+      }
+    }, stepTime);
+  }
 
-		// Print results
-		dateDiffAni(daysDiff, dateDiff[0], 2000, setDays)
-		dateDiffAni(monthsDiff, dateDiff[1], 1000, setMonths)
-		dateDiffAni(yearsDiff, dateDiff[2], 3000, setYears)
+  function getDate(data: CreateDateData) {
+    const { day, month, year } = data;
 
-		return
-	}
+    let birthday = dayjs(new Date(year, month - 1, day));
+    const today = dayjs();
 
-	return (
-		<>
-			<Head>
-				<title>Age Calculator</title>
-				<meta
-					name='description'
-					content='Age calculator app'
-				/>
-				<meta
-					name='viewport'
-					content='width=device-width, initial-scale=1'
-				/>
-				<link
-					rel='icon'
-					type='image/png'
-					sizes='32x32'
-					href='/favicon.png'
-				/>
-			</Head>
-			<main className={`${styles.main}`}>
-				<section className={styles.calculator}>
-					<form
-						id='calcAgeForm'
-						onSubmit={handleSubmit(getDate)}
-						className={styles.form}
-					>
-						<div
-							className={
-								errors.day
-									? `${styles.form__field} ${styles.error}`
-									: `${styles.form__field}`
-							}
-						>
-							<label htmlFor='day'>Day</label>
-							<input
-								placeholder='DD'
-								type='number'
-								id='day'
-								{...register('day', { valueAsNumber: true })}
-							/>
-							{errors.day && (
-								<span className={styles.error}>{errors.day.message}</span>
-							)}
-						</div>
+    // Calculate full years
+    const yearsDiff = today.diff(birthday, "year");
+    birthday = birthday.add(yearsDiff, "year");
 
-						<div
-							className={
-								errors.month
-									? `${styles.form__field} ${styles.error}`
-									: `${styles.form__field}`
-							}
-						>
-							<label htmlFor='month'>Month</label>
-							<input
-								placeholder='MM'
-								type='number'
-								id='month'
-								{...register('month', { valueAsNumber: true })}
-							/>
-							{errors.month && (
-								<span className={styles.error}>{errors.month.message}</span>
-							)}
-						</div>
+    // Calculate remaining months
+    const monthsDiff = today.diff(birthday, "month");
+    birthday = birthday.add(monthsDiff, "month");
 
-						<div
-							className={
-								errors.year
-									? `${styles.form__field} ${styles.error}`
-									: `${styles.form__field}`
-							}
-						>
-							<label htmlFor='year'>Year</label>
-							<input
-								placeholder='YYYY'
-								type='number'
-								id='year'
-								{...register('year', { valueAsNumber: true })}
-							/>
-							{errors.year && (
-								<span className={styles.error}>{errors.year.message}</span>
-							)}
-						</div>
+    // Calculate remaining days
+    const daysDiff = today.diff(birthday, "day");
 
-						<div className={styles.spacer}>empty</div>
-					</form>
+    // Animate results
+    animateValue(0, yearsDiff, 2000, setYears);
+    animateValue(0, monthsDiff, 1000, setMonths);
+    animateValue(0, daysDiff, 1500, setDays);
+  }
 
-					<div className={styles.divider}>
-						<div className={`${styles.divider__bar} ${styles.left}`}></div>
-						<div className={`${styles.divider__bar} ${styles.right}`}></div>
-						<button
-							type='submit'
-							form='calcAgeForm'
-							className={styles.button}
-						>
-							<Image
-								src={ArrowIconUrl}
-								alt='Arrow down'
-								priority
-							/>
-						</button>
-					</div>
-					<div className={styles.result}>
-						<p>
-							<span
-								id='years'
-								className={styles.result__numbers}
-							>
-								{years}
-							</span>{' '}
-							years
-						</p>
-						<p>
-							<span
-								id='months'
-								className={styles.result__numbers}
-							>
-								{months}
-							</span>{' '}
-							months
-						</p>
-						<p>
-							<span
-								id='days'
-								className={styles.result__numbers}
-							>
-								{days}
-							</span>{' '}
-							days
-						</p>
-					</div>
-				</section>
-				<div className={styles.attribution}>
-					Challenge by{' '}
-					<a
-						href='https://www.frontendmentor.io?ref=challenge'
-						target='_blank'
-					>
-						Frontend Mentor
-					</a>
-					. Coded by{' '}
-					<a
-						href='https://www.frontendmentor.io/profile/benilio'
-						target='_blank'
-					>
-						Benício Oliveira
-					</a>
-					.
-				</div>
-			</main>
-		</>
-	)
+  return (
+    <>
+      <Head>
+        <title>Age Calculator</title>
+        <meta name="description" content="Age calculator app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+      </Head>
+      <main className={`${styles.main}`}>
+        <section className={styles.calculator}>
+          <form
+            id="calcAgeForm"
+            onSubmit={handleSubmit(getDate)}
+            className={styles.form}
+          >
+            <div
+              className={
+                errors.day
+                  ? `${styles.form__field} ${styles.form__field__error}`
+                  : `${styles.form__field}`
+              }
+            >
+              <label htmlFor="day">Day</label>
+              <input
+                placeholder="DD"
+                type="text"
+                inputMode="numeric"
+                maxLength={2}
+                id="day"
+                className={
+                  errors.day
+                    ? `${styles.form__field__numeric} ${styles.form__field__numeric__error}`
+                    : `${styles.form__field__numeric}`
+                }
+                {...register("day", { valueAsNumber: true })}
+              />
+              {errors.day && (
+                <span className={styles.form__field__error}>
+                  {errors.day.message}
+                </span>
+              )}
+            </div>
+
+            <div
+              className={
+                errors.month
+                  ? `${styles.form__field} ${styles.form__field__error}`
+                  : `${styles.form__field}`
+              }
+            >
+              <label htmlFor="month">Month</label>
+              <input
+                placeholder="MM"
+                type="text"
+                inputMode="numeric"
+                maxLength={2}
+                id="month"
+                className={
+                  errors.month
+                    ? `${styles.form__field__numeric} ${styles.form__field__numeric__error}`
+                    : `${styles.form__field__numeric}`
+                }
+                {...register("month", { valueAsNumber: true })}
+              />
+              {errors.month && (
+                <span className={styles.form__field__error}>
+                  {errors.month.message}
+                </span>
+              )}
+            </div>
+
+            <div
+              className={
+                errors.year
+                  ? `${styles.form__field} ${styles.form__field__error}`
+                  : `${styles.form__field}`
+              }
+            >
+              <label htmlFor="year">Year</label>
+              <input
+                placeholder="YYYY"
+                type="text"
+                inputMode="numeric"
+                maxLength={4}
+                id="year"
+                className={
+                  errors.year
+                    ? `${styles.form__field__numeric} ${styles.form__field__numeric__error}`
+                    : `${styles.form__field__numeric}`
+                }
+                {...register("year", { valueAsNumber: true })}
+              />
+              {errors.year && (
+                <span className={styles.form__field__error}>
+                  {errors.year.message}
+                </span>
+              )}
+            </div>
+
+            <div className={styles.spacer}>empty</div>
+          </form>
+
+          <div className={styles.divider}>
+            <div className={`${styles.divider__bar} ${styles.left}`}></div>
+            <div className={`${styles.divider__bar} ${styles.right}`}></div>
+            <button type="submit" form="calcAgeForm" className={styles.button}>
+              <Image
+                src={ArrowIconUrl}
+                alt="Arrow down"
+                // width={46}
+                // height={46}
+              />
+            </button>
+          </div>
+          <div className={styles.result}>
+            <p>
+              <span id="years" className={styles.result__numbers}>
+                {years}
+              </span>{" "}
+              years
+            </p>
+            <p>
+              <span id="months" className={styles.result__numbers}>
+                {months}
+              </span>{" "}
+              months
+            </p>
+            <p>
+              <span id="days" className={styles.result__numbers}>
+                {days}
+              </span>{" "}
+              days
+            </p>
+          </div>
+        </section>
+        <div className={styles.attribution}>
+          Challenge by{" "}
+          <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">
+            Frontend Mentor
+          </a>
+          . Coded by{" "}
+          <a
+            href="https://www.frontendmentor.io/profile/benilio"
+            target="_blank"
+          >
+            Benício Oliveira
+          </a>
+          .
+        </div>
+      </main>
+    </>
+  );
 }
